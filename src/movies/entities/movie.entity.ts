@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Category } from './category.entity';
 
 @Entity()
 export class Movie {
@@ -15,5 +22,22 @@ export class Movie {
   director: string;
 
   @Column('date')
-  year: string;
+  release: string;
+
+  @ManyToMany(() => Category, (category) => category.id, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable({
+    name: 'movie_categories',
+    joinColumn: {
+      name: 'movie',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'category',
+      referencedColumnName: 'id',
+    },
+  })
+  categories: Category[];
 }

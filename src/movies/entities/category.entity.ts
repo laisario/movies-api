@@ -1,10 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Movie } from './movie.entity';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('name')
-  title: string;
+  @Column('text')
+  name: string;
+
+  @ManyToMany(() => Movie, (movie) => movie.id, {
+    cascade: true,
+  })
+  movies?: Movie[];
 }

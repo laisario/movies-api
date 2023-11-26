@@ -8,6 +8,8 @@ import { MoviesModule } from './movies/movies.module';
 
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { Movie } from './movies/entities/movie.entity';
+import { Category } from './movies/entities/category.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { User } from './users/entities/user.entity';
       username: process.env.PG_USER,
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DB,
-      entities: [User],
+      entities: [User, Movie, Category],
       synchronize: true,
     }),
     UsersModule,
