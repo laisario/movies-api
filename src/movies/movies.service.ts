@@ -13,7 +13,7 @@ export class MoviesService {
     private movieRepository: Repository<Movie>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
-  ) { }
+  ) {}
 
   async getCategories() {
     return await this.categoryRepository.find();
@@ -33,7 +33,6 @@ export class MoviesService {
       }
       categories.push(category);
     }
-    console.log('>>>>>>>>>>>>>>>', categories);
     const movie = new Movie();
     movie.categories = [...categories];
     movie.director = createMovieDto.director;
@@ -52,9 +51,24 @@ export class MoviesService {
   }
 
   async update(id: number, updateMovieDto: UpdateMovieDto) {
+    const categories = [];
+    for (const i in updateMovieDto.categories) {
+      const category = await this.getCategory(updateMovieDto.categories[i].id);
+
+      if (!category) {
+        throw new NotFoundException();
+      }
+      categories.push(category);
+    }
+    const movie = new Movie();
+    movie.categories = [...categories];
+    movie.director = updateMovieDto.director;
+    movie.duration = updateMovieDto.duration;
+    movie.release = updateMovieDto.release;
+    movie.title = updateMovieDto.title;
     const toUpdate = await this.movieRepository.findOne({ where: { id } });
 
-    const updated = Object.assign(toUpdate, updateMovieDto);
+    const updated = Object.assign(toUpdate, movie);
 
     return await this.movieRepository.save(updated);
   }
